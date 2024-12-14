@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSCSD Detective Bureau</title>
+
+    <!-- Locomotive Scroll -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.0/dist/locomotive-scroll.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@4.1.0/dist/locomotive-scroll.min.js"></script>
+
+    <style>
+		body {
+			font-family: 'Georgia', serif;
+			background-color: #FAF3E0; /* Light tan background */
+			margin: 0;
+			padding: 0;
+			color: #333;
+			cursor: url('https://cdn.jsdelivr.net/gh/sindresorhus/humanize-urls@0.0.0/images/icons/cursor.ico'), auto;
+			overflow-x: hidden;
+			line-height: 1.8;
+		}
+
+		header {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			background: linear-gradient(90deg, #8B4513, #FFD700);
+			color: white;
+			display: flex;
+			justify-content: flex-start; /* Align to the left instead of space-between */
+			align-items: center;
+			padding: 20px 30px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+			z-index: 9999;
+			transition: all 0.3s ease;
+		}
+
+		header h1 {
+			font-size: 36px;
+			margin: 0;
+			color: #fff;
+			font-family: 'Georgia', sans-serif;
+			text-shadow: 2px 2px #8B4513;
+		}
+
+		/* Adjust the button positioning */
+		header .button {
+			margin-left: 1300px; /* Adjust the value to move the button left/right */
+			background: #8B4513;
+			color: white;
+			padding: 12px 25px;
+			font-size: 16px;
+			border: none;
+			border-radius: 8px;
+			cursor: pointer;
+			transition: transform 0.3s ease, background-color 0.3s ease;
+		}
+
+		header .button:hover {
+			background-color: #FFD700; /* Gold on hover */
+			transform: scale(1.1);
+		}
+
+		.main-content {
+			padding: 90px 30px 50px;
+			text-align: center;
+			background: #FFF8DC; /* Cornsilk */
+		}
+
+		.staff-list {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 20px;
+			padding: 0;
+			margin-top: 30px;
+			list-style: none;
+		}
+
+		.staff-member {
+			background-color: #FFFFFF;
+			border-radius: 10px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+			padding: 20px;
+			text-align: center;
+			transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+			border: 2px solid #8B4513; /* Sheriff brown border */
+		}
+
+		.staff-member:hover {
+			transform: translateY(-10px);
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+		}
+
+		.staff-member img {
+			width: 100%;
+			max-width: 150px;
+			height: 150px;
+			object-fit: cover;
+			border-radius: 50%;
+			margin-bottom: 15px;
+			border: 3px solid #FFD700; /* Gold border */
+		}
+
+		.staff-member h3 {
+			font-size: 22px;
+			color: #8B4513; /* Sheriff brown */
+			margin-bottom: 10px;
+		}
+
+		.staff-member p {
+			font-size: 16px;
+			color: #666;
+		}
+
+		.section-header {
+			font-size: 32px;
+			color: #8B4513;
+			margin-bottom: 20px;
+			position: relative;
+			display: inline-block;
+			text-shadow: 1px 1px #FFD700;
+		}
+
+		.section-header:after {
+			content: '';
+			position: absolute;
+			width: 100%;
+			height: 2px;
+			background-color: #FFD700; /* Gold underline */
+			bottom: -10px;
+			left: 0;
+		}
+
+		.about-section, 
+		.mission-section, 
+		.contact-section, 
+		.faq-section, 
+		.news-section, 
+		.achievements-section {
+			padding: 50px 30px;
+			background-color: #FAF3E0; /* Light tan */
+			margin-top: 30px;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			justify-content: center;
+			align-items: center;
+		}
+
+		.modal-content {
+			background-color: white;
+			padding: 20px;
+			border-radius: 10px;
+			text-align: center;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+			position: relative;
+			border: 3px solid #8B4513; /* Sheriff border */
+		}
+
+		.modal .close-button {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			font-size: 20px;
+			cursor: pointer;
+			background-color: transparent;
+			border: none;
+			color: #8B4513;
+		}
+
+		.modal input {
+			padding: 10px;
+			font-size: 16px;
+			margin-bottom: 10px;
+			border: 1px solid #FFD700;
+			border-radius: 5px;
+		}
+
+		.modal button {
+			padding: 10px 20px;
+			background-color: #8B4513;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s, transform 0.3s;
+		}
+
+		.modal button:hover {
+			background-color: #FFD700;
+			transform: scale(1.05);
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		body {
+			animation: fadeIn 1.5s ease-out;
+		}
+
+		header.sticky {
+			background-color: #8B4513; /* Solid brown when sticky */
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+		}
+
+		.staff-member:nth-child(2) {
+			transform: scale(1.1);
+		}
+
+		.staff-member:nth-child(1),
+		.staff-member:nth-child(3) {
+			transform: scale(0.95);
+		}
+    </style>
+</head>
+<body>
+
+<header id="header">
+    <h1>LSCSD Detective Bureau</h1>
+    <button class="button" onclick="openLoginModal()">Вход</button>
+</header>
+
+<div class="main-content" data-scroll-container>
+    <h2 class="section-header">Добро пожаловать в LSCSD Detective Bureau</h2>
+    <p>Наша миссия - расследовать тяжкие преступления, вершить правосудие и отстаивать закон с преданностью и честностью. Познакомьтесь с нашей высококвалифицированной командой:</p>
+
+    <ul class="staff-list">
+        <!-- Staff Member 1 -->
+        <li class="staff-member">
+            <img src="https://via.placeholder.com/150" alt="Frankie Kennedy">
+            <h3>Frankie Kennedy #255649</h3>
+            <p>Заместитель начальника детективного бюро</p>
+        </li>
+        <!-- Staff Member 2 -->
+        <li class="staff-member">
+            <img src="https://media.discordapp.net/attachments/1074050799749050562/1317454982676611122/image1.png?ex=675ebf11&is=675d6d91&hm=53d7bb50198ec752f34b1ad954ca716f2c92d53096091013fb218dc8fe40ed48&=&format=webp&quality=lossless&width=350&height=350" alt="Jonathan Greenfield">
+            <h3>Jonathan Greenfield #250462</h3>
+            <p>Начальник детективного бюро</p>
+        </li>
+        <!-- Staff Member 3 -->
+        <li class="staff-member">
+            <img src="https://media.discordapp.net/attachments/1074050799749050562/1317455477713539072/12141.png?ex=675ebf87&is=675d6e07&hm=0c31155dd24fd180b638d9a1f1402fd10008e1a2c99d7efe05ef5a82c46e6ac9&=&format=webp&quality=lossless" alt="Namiq Bosca">
+            <h3>Namiq Bosca #273312</h3>
+            <p>Заместитель начальника детективного бюро</p>
+        </li>
+    </ul>
+	
+	<section class="about-section">
+		<h3>🌟 Общие сведения:</h3>
+		<p><strong>Detective Bureau</strong> — это специализированный отдел детективов, посвященный расследованию тяжких и особо тяжких преступлений. Наша миссия заключается в обеспечении справедливости и безопасности в обществе через тщательное расследование и сбор доказательств.</p>
+
+		<h3>🔍 Основные обязанности:</h3>
+		<ul>
+			<p><strong>Сбор и анализ доказательств:</strong> Мы проводим экспертизы, собираем улики и исследуем места преступлений.</p>
+			<p><strong>Интервьюирование:</strong> Взаимодействие с свидетелями, потерпевшими и подозреваемыми для получения необходимой информации.</p>
+			<p><strong>Проведение допросов:</strong> Углубленные допросы подозреваемых для выяснения всех обстоятельств дела.</p>
+			<p><strong>Написание кейс-файлов:</strong> Документирование всех этапов расследования, включая сбор доказательств, допросы и анализ данных.</p>
+			<p><strong>Работа в команде:</strong> Сотрудничество с другими подразделениями для успешного завершения дел.</p>
+			<p><strong>Внедрение:</strong> Внедрение в криминальные организации.</p>
+			<p><strong>Работа под прикрытием:</strong> Работа под прикрытием для раскрытия тяжелых преступлений.</p>
+		</ul>
+	</section>
+
+    <section class="mission-section">
+		<h2 class="section-header">🎯 Цели и ценности:</h2>
+			<ul>
+				<p>Обеспечение безопасности и правопорядка.</p>
+				<p>Поддержка честности и прозрачности в процессе расследования.</p>
+				<p>Постоянное развитие и обучение для повышения квалификации сотрудников.</p>
+			</ul>
+    </section>
+
+    <section class="news-section">
+        <h2 class="section-header">🗞️ Новости:</h2>
+        <ul>
+            <p><strong>Рейд:</strong> Несколько недель назад был совершен рейд на самый опасный преступный синдикат нашего штата.</p>
+            <p><strong>Кадры:</strong> Наша команда увеличивается, в нашем отделе появилось 2 новых сотрудника, которые и в данный момент рискуют своей жизнью ради безопасности штата.</p>
+        </ul>
+    </section>
+
+    <section class="achievements-section">
+        <h2 class="section-header">🏅 Достижения:</h2>
+        <p>За последние два месяца детективным бюро шерифского департамента было задержано 20 правонарушителей, чьи действия могли бы привести к гибели тысяч невинных граждан.</p>
+    </section>
+</div>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <button class="close-button" onclick="closeLoginModal()">✖</button>
+        <h3>Вход в систему</h3>
+        <input type="password" id="passwordInput" placeholder="Enter Password">
+        <button onclick="checkPassword()">Войти</button>
+    </div>
+</div>
+
+<script>
+    const scroll = new LocomotiveScroll({
+        el: document.querySelector('[data-scroll-container]'),
+        smooth: true
+    });
+
+    function openLoginModal() {
+        document.getElementById("loginModal").style.display = "flex";
+    }
+
+    function closeLoginModal() {
+        document.getElementById("loginModal").style.display = "none";
+    }
+
+	function checkPassword() {
+		const passwordInput = document.getElementById("passwordInput").value; // Fixed .value() to .value
+
+		// Get current date
+		const today = new Date();
+		const day = String(today.getDate()).padStart(2, '0');
+		const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+		const year = today.getFullYear();
+
+		// Format the correct password with current date and 'detective-b'
+		const correctPassword = `${day}.${month}.${year}detective-b`;
+
+		if (passwordInput === correctPassword) {
+			alert('Вход в аккаунт успешен!');
+			document.getElementById("loginModal").style.display = 'none';
+			window.location.href = 'panel.html'; // Redirect to staff.html
+		} else {
+			alert('Вход в аккаунт отклонен!');
+		}
+	}
+
+    window.onscroll = function () {
+        const header = document.getElementById("header");
+        if (window.scrollY > 50) {
+            header.classList.add("sticky");
+        } else {
+            header.classList.remove("sticky");
+        }
+    };
+</script>
+</body>
+</html>

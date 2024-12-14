@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Reporting</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <button onclick="location.href='panel.html'">Staff Panel</button>
+            <button onclick="location.href='index.html'">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Weekly Reporting</h1>
+            </header>
+
+            <section id="weekly-reporting">
+                <h2>Submit Your Weekly Report</h2>
+                <form id="report-form">
+                    <label for="name">Full Name:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="static-id">Static ID:</label>
+                    <input type="text" id="static-id" name="static-id" required>
+
+                    <label for="work-report">Work Report (Upload Files):</label>
+                    <input type="file" id="work-report" name="work-report" multiple required>
+
+                    <p>🔂 *Attach at least 3 files proving your work as a detective, such as: case report, written reports, interrogation, undercover operations, etc.*</p>
+
+                    <button type="submit">Submit Weekly Report</button>
+                </form>
+            </section>
+        </div>
+    </div>
+
+	<script>
+		document.getElementById('report-form').addEventListener('submit', async function(event) {
+			event.preventDefault();
+
+			const lastSubmission = localStorage.getItem('lastSubmission');
+			const oneWeek = 2 * 24 * 60 * 60 * 1000;
+
+			// Check if the user has submitted in the last week
+			if (lastSubmission && (Date.now() - lastSubmission < oneWeek)) {
+				alert('You can only submit a report once every 2 days.');
+				return;
+			}
+
+			const data = new FormData(this);
+			const files = document.getElementById('work-report').files;
+
+			if (!files || files.length < 3) {
+				alert('Please attach at least 3 files.');
+				return;
+			}
+
+			const fields = [
+				{ name: '**Full Name:**', value: data.get('name'), inline: true },
+				{ name: '**Static ID:**', value: data.get('static-id'), inline: true },
+				{ name: '**Number of Files Attached:**', value: files.length, inline: false },
+				{ name: '**Submission Timestamp:**', value: new Date().toISOString(), inline: false }
+			];
+
+			// Prepare the data to send to Google Apps Script
+			const reportData = {
+				name: data.get('name'),
+				staticId: data.get('static-id'),
+				filesCount: files.length,
+				fields: fields
+			};
+
+			try {
+				const response = await fetch('https://script.google.com/macros/s/AKfycbwYD4ElKb-1HbJPGzADccH0nr0kFBiW1cMZhQ5qGyrySbvwJeyHCY07ZAmd1QnUZr5_/exec', {
+					method: 'POST',
+					body: JSON.stringify(reportData),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				});
+
+				if (response.ok) {
+					localStorage.setItem('lastSubmission', Date.now());
+					alert('Report submitted successfully!');
+					this.reset();
+				} else {
+					alert('Failed to submit report. Please try again.');
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('An error occurred while submitting the report. Please try again later.');
+			}
+		});
+	</script>
+
+</body>
+</html>

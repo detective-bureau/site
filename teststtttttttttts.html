@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Семья Lockwood</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/locomotive-scroll@4.1.0/dist/locomotive-scroll.css">
+    <script src="https://unpkg.com/locomotive-scroll@4.1.0/dist/locomotive-scroll.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            overflow-x: hidden;
+            position: relative;
+            user-select: none;
+        }
+        h1, h2 {
+            margin: 20px 0;
+            color: #fff;
+            font-size: 3rem;
+        }
+        p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+        }
+        nav {
+            background-color: #111;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 999;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 15px;
+            cursor: pointer;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #ccc;
+        }
+        section {
+            padding: 100px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        section.visible {
+            opacity: 1;
+        }
+        section#about {
+            background: linear-gradient(180deg, #222, #333);
+        }
+        section#photos {
+            background: linear-gradient(180deg, #333, #444);
+            padding: 50px 20px;
+        }
+        section#form {
+            background: linear-gradient(180deg, #444, #444);
+            padding-bottom: 50px;
+        }
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .gallery-img {
+            width: calc(33.33% - 10px);
+            border-radius: 10px;
+            transition: transform 0.3s, filter 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        .gallery-img:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+        }
+        @media (max-width: 768px) {
+            .gallery-img {
+                width: calc(50% - 10px);
+            }
+        }
+        @media (max-width: 480px) {
+            .gallery-img {
+                width: 100%;
+            }
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 400px;
+            margin-top: 20px;
+            background-color: rgba(85, 85, 85, 0.8);
+            padding: 20px;
+            border-radius: 20px;
+        }
+        label, input, textarea {
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+            color: #fff;
+        }
+        input, textarea {
+            padding: 12px;
+            border: none;
+            background-color: #555;
+            color: #fff;
+            outline: none;
+            font-size: 1.25rem;
+            border-radius: 10px;
+        }
+        input[type="submit"] {
+            cursor: pointer;
+            background-color: #666;
+            transition: background-color 0.3s;
+            border-radius: 10px;
+        }
+        input[type="submit"]:hover {
+            background-color: #888;
+        }
+        img {
+            user-select: none;
+            pointer-events: none;
+        }
+        .rules {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #fff;
+            text-align: left;
+            max-width: 600px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #333;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 500px;
+            width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal h2 {
+            margin: 0 0 10px;
+        }
+        .close {
+            cursor: pointer;
+            float: right;
+            font-size: 1.5rem;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body data-scroll-container>
+
+    <nav>
+        <ul>
+            <li><a href="#about" data-scroll-to="about">О нас</a></li>
+            <li><a href="#photos" data-scroll-to="photos">Наши фото</a></li>
+            <li><a href="#form" data-scroll-to="form">Подать заявку</a></li>
+        </ul>
+    </nav>
+
+    <section id="about" data-scroll-section>
+        <h1>Семья Lockwood</h1>
+        <p>Добро пожаловать в семью Lockwood. Мы предлагаем уникальные возможности для вашего развития и карьеры в команде профессионалов.</p>
+    </section>
+
+    <section id="photos" data-scroll-section>
+        <h2>Наши фото</h2>
+        <div class="photo-gallery">
+            <img src="https://i.imgur.com/0CeSw0V.jpeg" alt="Свадьба Лекса и Амори" class="gallery-img">
+            <img src="https://i.imgur.com/f3o1gBT.jpeg" alt="Свадьба Лекса и Амори" class="gallery-img">
+            <img src="https://i.imgur.com/48utsDc.jpeg" alt="Свадьба Лекса и Амори" class="gallery-img">
+        </div>
+    </section>
+
+    <section id="form" data-scroll-section>
+        <h2>Подать заявку</h2>
+        <div class="rules">
+            <h3>Правила заполнения формы:</h3>
+            <ul>
+                <li>Заполняйте все обязательные поля, отмеченные звездочкой (*).</li>
+                <li>Будьте честны и точны в своих ответах.</li>
+                <li>Убедитесь, что ваша контактная информация актуальна.</li>
+                <li>Ваши данные не будут переданы третьим лицам.</li>
+            </ul>
+        </div>
+        <form id="applicationForm">
+            <h3>Основные вопросы (IC):</h3>
+            <label for="name">Ваши Имя, Фамилия:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="staticID">Ваш StaticID:</label>
+            <input type="text" id="staticID" name="staticID" required>
+
+            <label for="years">Уровень персонажа:</label>
+            <input type="text" id="years" name="years">
+
+            <label for="phone">Ваш номер телефона (игровой):</label>
+            <input type="text" id="phone" name="phone">
+			
+            <label for="fraction">В какой гос. фракции состоите?</label>
+            <input type="text" id="fraction" name="fraction" required>
+
+            <label for="description">Пару предложений о себе:*</label>
+            <textarea id="description" name="description" required></textarea>
+
+            <h3>Основные вопросы (OOC):</h3>
+            <label for="realName">Ваше имя:*</label>
+            <input type="text" id="realName" name="realName" required>
+
+            <label for="age">Сколько Вам лет?*</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="discord">Ваш ник в Discord:*</label>
+            <input type="text" id="discord" name="discord" required>
+
+            <label for="experience">Стаж игры на РП серверах:</label>
+            <input type="text" id="experience" name="experience">
+
+            <label for="rpKnowledge">Знание RP: (1-10)</label>
+            <input type="number" id="rpKnowledge" name="rpKnowledge" min="1" max="10" required>
+
+            <label for="onlineTime">Средний ежедневный онлайн?*</label>
+            <input type="number" id="onlineTime" name="onlineTime" min="1" max="10" required>
+
+            <label for="source">Откуда о нас узнали?*</label>
+            <input type="text" id="source" name="source" required>
+
+            <label for="conflictResolution">Как обычно решаете конфликты?*</label>
+            <textarea id="conflictResolution" name="conflictResolution" required></textarea>
+
+            <input type="submit" value="Отправить заявку">
+        </form>
+    </section>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <p id="modalMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Locomotive Scroll
+        const scroll = new LocomotiveScroll({
+            el: document.querySelector('[data-scroll-container]'),
+            smooth: true
+        });
+
+        // Smooth scroll to sections
+        document.querySelectorAll('[data-scroll-to]').forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const targetId = link.getAttribute('data-scroll-to');
+                scroll.scrollTo(document.getElementById(targetId), {
+                    offset: -100,
+                    duration: 1000
+                });
+            });
+        });
+
+        // Fade-in effect using Intersection Observer
+        const sections = document.querySelectorAll('section');
+
+        const options = {
+            root: null,
+            threshold: 0.1 // Trigger when 10% of section is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, options);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Submission limit
+        const lastSubmission = localStorage.getItem('lastSubmission');
+        const oneWeek = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+
+        // Modal display function
+        function showModal(title, message) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = message;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        // Close modal event
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('modal').style.display = 'none';
+        });
+
+        // Form submission with Discord Webhook
+        document.getElementById('applicationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Check if the user has submitted in the last week
+            if (lastSubmission && (Date.now() - lastSubmission < oneWeek)) {
+                showModal('Ошибка', 'Вы можете отправить заявку только раз в 7 дней.');
+                return;
+            }
+
+            const data = new FormData(this);
+            const webhookUrl = 'https://discord.com/api/webhooks/1286666216663941225/W2ynwjJUS0gfd-gAaCbf-lKgAiTygQw9fD-P-qclx4PXkF1e4-QuWBru5U4beC_DuFq-'; 
+
+            const timestamp = Math.floor(Date.now() / 1000);
+
+            const fields = [
+                { name: '**Имя, Фамилия:**', value: data.get('name'), inline: true },
+                { name: '**StaticID:**', value: data.get('staticID'), inline: true },
+                { name: '**Уровень персонажа:**', value: data.get('years') || 'Не указано', inline: false },
+                { name: '**Номер телефона (игровой):**', value: data.get('phone') || 'Не указано', inline: false },
+                { name: '**Гос. фракция:**', value: data.get('fraction'), inline: false },
+                { name: '**Пару предложений о себе:**', value: data.get('description'), inline: false },
+                { name: '**Имя (OOC):**', value: data.get('realName'), inline: true },
+                { name: '**Возраст (OOC):**', value: data.get('age'), inline: true },
+                { name: '**Ник в Discord (OOC):**', value: data.get('discord'), inline: true },
+                { name: '**Стаж игры на РП серверах (OOC):**', value: data.get('experience') || 'Не указано', inline: false },
+                { name: '**Знание RP (1-10) (OOC):**', value: data.get('rpKnowledge'), inline: false },
+                { name: '**Средний ежедневный онлайн (OOC):**', value: data.get('onlineTime'), inline: false },
+                { name: '**Откуда о нас узнали? (OOC):**', value: data.get('source'), inline: false },
+                { name: '**Как обычно решаете конфликты? (OOC):**', value: data.get('conflictResolution'), inline: false }
+            ];
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                body: JSON.stringify({
+                    content: `<@&1278849220664627302> | **Рассмотреть заявку**: [Нажмите здесь](https://lockwood-famq.github.io/request/reply.html?user=${data.get('discord')}) | Время: <t:${timestamp}:R>`,
+                    embeds: [{
+                        title: 'Детали заявки',
+                        fields: fields,
+                        color: 4653056
+                    }]
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    localStorage.setItem('lastSubmission', Date.now());
+                    showModal('Успех', 'Заявка отправлена успешно!');
+                    this.reset();
+                } else {
+                    showModal('Ошибка', 'Произошла ошибка при отправке заявки.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                showModal('Ошибка', 'Произошла ошибка при отправке заявки.');
+            });
+        });
+    </script>
+</body>
+</html>

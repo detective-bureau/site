@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotion Report</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <button onclick="location.href='panel.html'">Staff Panel</button>
+            <button onclick="location.href='index.html'">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <h1>Promotion Report</h1>
+            </header>
+
+            <section id="promotion-report">
+                <h2>Rank Promotion Report</h2>
+                <form action="/submit-promotion-report" method="POST">
+                    <label for="name">First Name | Last Name | Static ID:</label>
+                    <input type="text" id="name" name="name" required>
+
+                    <label for="promotion-details">From what rank to what rank you are being promoted:</label>
+                    <input type="text" id="promotion-details" name="promotion-details" required>
+
+                    <label for="progress-report">Report on Your Progress:</label>
+                    <textarea id="progress-report" name="progress-report" rows="5" required></textarea>
+
+                    <label for="files">Upload Your Supporting Files:</label>
+                    <input type="file" id="files" name="files" multiple>
+
+                    <button type="submit">Submit Promotion Report</button>
+                </form>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
